@@ -20,29 +20,9 @@ extern "C" void solve(const float* A, const float* B, float* C, int M, int N, in
     dim3 blocksPerGrid((K + threadsPerBlock.x - 1) / threadsPerBlock.x,
                        (M + threadsPerBlock.y - 1) / threadsPerBlock.y);
 
-    //allocate GPU memory
-    float* A_d;
-    float* B_d;
-    float* C_d;
-
-    cudaMalloc((void**)&A_d, M*N*sizeof(float));
-    cudaMalloc((void**)&B_d, N*K*sizeof(float));
-    cudaMalloc((void**)&C_d, M*K*sizeof(float));
-
-    //copy data to GPU
-    cudaMemcpy(A_d,A,M*N*sizeof(float),cudaMemcpyHostToDevice);
-    cudaMemcpy(B_d,B,N*K*sizeof(float),cudaMemcpyHostToDevice);
-
     //call kernel
-    matrix_multiplication_kernel<<<blocksPerGrid, threadsPerBlock>>>(A_d, B_d, C_d, M, N, K);
+    matrix_multiplication_kernel<<<blocksPerGrid, threadsPerBlock>>>(A, B, C, M, N, K);
     cudaDeviceSynchronize();
 
-    //copy data from GPU
-    cudaMemcpy(C,C_d,M*K*sizeof(float),cudaMemcpyDeviceToHost);
-
-    //free data
-    cudaFree(A_d);
-    cudaFree(B_d);
-    cudaFree(C_d);
     
 }

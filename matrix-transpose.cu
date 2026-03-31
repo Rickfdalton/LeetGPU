@@ -16,24 +16,9 @@ extern "C" void solve(const float* input, float* output, int rows, int cols) {
     dim3 blocksPerGrid((cols + threadsPerBlock.x - 1) / threadsPerBlock.x,
                        (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);
     
-    //allocate memory
-    float* matrix_d;
-    float* transpose_d;
 
-    cudaMalloc((float**)&matrix_d, rows*cols*sizeof(float));
-    cudaMalloc((float**)&transpose_d, cols*rows*sizeof(float));
-    
-    //copy to GPU
-    cudaMemcpy(matrix_d, input,rows*cols*sizeof(float),cudaMemcpyHostToDevice);
-
-    matrix_transpose_kernel<<<blocksPerGrid, threadsPerBlock>>>(matrix_d, transpose_d, rows, cols);
+    matrix_transpose_kernel<<<blocksPerGrid, threadsPerBlock>>>(input, output, rows, cols);
     cudaDeviceSynchronize();
 
-    //copy to CPU
-    cudaMemcpy(output, transpose_d,rows*cols*sizeof(float),cudaMemcpyDeviceToHost);
-
-    //free
-    cudaFree(matrix_d);
-    cudaFree(transpose_d);
 
 }
