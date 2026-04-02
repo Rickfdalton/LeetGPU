@@ -1,5 +1,6 @@
 #include <cuda_runtime.h>
 
+
 __global__ void vector_add(const float* A, const float* B, float* C, int N) {
     unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
     if(i < N){
