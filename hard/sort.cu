@@ -5,7 +5,6 @@ __device__   int coRank(float* A, float* B,   int m,   int n,   int k);
 __device__ void merge(float* A, float* B, float* C,   int m,   int n);
 __global__ void merge_sort_kernel(float* src, float* dst, int N, int width);
 
-
 /*
 Finding i from k
 ie. when the index of the output array given find the correct index of input array A.
@@ -35,10 +34,7 @@ each thread is responsible for calculating element for each index of output arra
 #define BLOCK_SIZE 512
 
 
-__device__ void merge(float* A, float* B, float* C,   int m,   int n){
-
-  
-
+__device__ void merge(float* A, float* B, float* C,   int m,   int n){  
     // merge
     for (int k = threadIdx.x; k < m + n; k += blockDim.x){
           int i = coRank(A, B, m,n,k);
@@ -50,8 +46,6 @@ __device__ void merge(float* A, float* B, float* C,   int m,   int n){
             }
     }
     __syncthreads();
-
-
 }
 
 __global__ void merge_sort_kernel(float* src, float* dst, int N, int width){
