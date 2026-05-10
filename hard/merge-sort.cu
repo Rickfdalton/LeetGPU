@@ -48,13 +48,8 @@ __device__   int coRank(float* A, float* B,   int m,   int n,   int k){
     }return low;
 }
 
-/*
-merge kernel
-each thread is responsible for calculating element for each index of output array
-*/
 #define BLOCK_SIZE 256
 #define CHUNK 16
-
 
 __device__ void merge_shared(float* A, float* B, float* C,   int m,   int n){
     extern __shared__ float shared[];
